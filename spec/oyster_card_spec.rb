@@ -8,8 +8,12 @@ describe OysterCard do
 	describe '#.topup' do
 		it "adds given value to balance" do
 			oyster = OysterCard.new(25)
-			expect(oyster.new_balance).to eq(25)
+			expect(oyster.top_up).to eq(25)
 		end
-    end
-end
+		it 'raises error, max limit reached' do
+			oyster = OysterCard.new(91)
+			expect{ oyster.top_up }.to raise_error 'top up limit reached'
+		end
+	end
+  end
 end

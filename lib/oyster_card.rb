@@ -6,7 +6,11 @@ class OysterCard
     @top_up = top_up
   end
 
-  def new_balance
-    return @balance + @top_up
+DEFAULT_LIMIT = 90
+
+  def top_up
+    error_message = 'top up limit reached'
+    raise error_message if @balance > DEFAULT_LIMIT
+    @balance += @top_up
   end
 end
