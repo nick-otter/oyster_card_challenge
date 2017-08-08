@@ -1,9 +1,12 @@
 # frozen_string_literal: true
-source "https://rubygems.org"
 
-ruby "2.4.0"
+source 'https://rubygems.org'
 
-git_source(:github) {|oyster_card_challenge| "https://github.com/#{oyster_card_challenge}" }
+ruby '2.4.0'
+gem 'simplecov'
+gem 'simplecov-console'
+
+git_source(:github) { |oyster_card_challenge| "https://github.com/#{oyster_card_challenge}" }
 
 group :test do
   gem 'rspec'
