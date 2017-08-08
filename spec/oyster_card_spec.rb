@@ -48,5 +48,13 @@ describe Journey do
     it 'confirms touch_out' do
       expect { subject.touch_out }.to raise_error('You have already touched out')
     end
+		it 'deducts fare amount' do
+			oyster = OysterCard.new
+			oyster.top_up(10)
+			journey = Journey.new(oyster)
+			journey.touch_in
+			journey.touch_out
+			expect(oyster.balance).to eq(9)
+		end
   end
 end

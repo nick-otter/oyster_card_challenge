@@ -3,7 +3,7 @@ class OysterCard
   DEFAULT_LIMIT = 90
   LIMIT_EXCEEDED = 'top up limit reached'.freeze
 
-  attr_reader :balance
+  attr_accessor :balance
 
   def initialize
     @balance = DEFAULT_BALANCE
@@ -45,9 +45,15 @@ class Journey
   def touch_out
     raise 'You have already touched out' unless in_journey?
     @journey = TOUCHED_OUT
+    deduct(@card)
   end
 
   def in_journey?
     @journey == TOUCHED_IN
+  end
+
+  private
+  def deduct(card)
+    card.balance -= 1
   end
 end
