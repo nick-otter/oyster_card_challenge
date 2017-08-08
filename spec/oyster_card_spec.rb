@@ -25,8 +25,8 @@ describe OysterCard do
 end
 
 describe Journey do
-
-	subject { Journey.new (OysterCard.new)}
+	
+  subject { Journey.new OysterCard.new }
 
   describe '#.touch_in/_out, in_journey?' do
     it '.touch_in' do
@@ -34,27 +34,41 @@ describe Journey do
     end
     it 'in_journey?' do
       oyster = OysterCard.new
-			oyster.top_up(10)
-			journey = Journey.new(oyster)
-			journey.touch_in
+      oyster.top_up(10)
+      journey = Journey.new(oyster)
+      journey.touch_in("aldgate")
       expect(journey.in_journey?).to eq(true)
     end
-		it 'can\'t touch in, low funds' do
-			expect { subject.touch_in }.to raise_error('You have insufficient funds')
-		end
+    it 'can\'t touch in, low funds' do
+      expect {subject.touch_in("aldgate")}.to raise_error('You have insufficient funds')
+    end
     it '.touch_out' do
       expect(subject).to respond_to(:touch_out)
     end
     it 'confirms touch_out' do
       expect { subject.touch_out }.to raise_error('You have already touched out')
     end
-		it 'deducts fare amount' do
+    it 'deducts fare amount' do
+      oyster = OysterCard.new
+      oyster.top_up(10)
+      journey = Journey.new(oyster)
+      journey.touch_in("aldgate")
+			expect{ journey.touch_out }.to change{oyster.balance}.by (-1)
+    end
+		it 'remembers entry station' do
 			oyster = OysterCard.new
-			oyster.top_up(10)
+      oyster.top_up(10)
 			journey = Journey.new(oyster)
-			journey.touch_in
+			journey.touch_in("aldgate")
+      expect(journey.entry_station).to include("aldgate")
+		end
+		it 'forgets entry station' do
+			oyster = OysterCard.new
+      oyster.top_up(10)
+      journey = Journey.new(oyster)
+			journey.touch_in("aldgate")
 			journey.touch_out
-			expect(oyster.balance).to eq(9)
+			expect(journey.entry_station).to eq(nil)
 		end
   end
 end
