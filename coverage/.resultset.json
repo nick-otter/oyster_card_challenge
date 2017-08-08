@@ -1,0 +1,60 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/Users/nickotter/Desktop/Coding/Google_Drive/Projects/oyster_card_challenge/spec/oyster_card_spec.rb": [
+        1,
+        1,
+        null,
+        1,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        1,
+        null,
+        1,
+        2,
+        null,
+        null,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/nickotter/Desktop/Coding/Google_Drive/Projects/oyster_card_challenge/lib/oyster_card.rb": [
+        1,
+        null,
+        1,
+        1,
+        null,
+        1,
+        1,
+        4,
+        null,
+        null,
+        1,
+        2,
+        2,
+        1,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null,
+        1,
+        2,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1502196037
+  }
+}
