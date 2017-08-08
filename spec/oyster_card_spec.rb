@@ -22,4 +22,20 @@ describe OysterCard do
 				expect(subject.balance).to eq(opening)
 			end
 		end
+		describe "#.touch_in/_out, in_journey?" do
+			it '.touch_in' do
+				expect(subject).to respond_to(:touch_in)
+			end
+			it 'in_journey?' do
+				subject.touch_in
+				expect(subject.in_journey?).to eq(true)
+			end
+			it '.touch_out' do
+				expect(subject).to respond_to(:touch_out)
+			end
+			it 'confirms touch_out' do
+				expect{ subject.touch_out }.to raise_error('You have already touched out')
+			end
+		end
+
 end
