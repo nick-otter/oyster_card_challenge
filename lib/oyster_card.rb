@@ -10,17 +10,19 @@ class OysterCard
   end
 
   def top_up(top_up)
+    raise LIMIT_EXCEEDED if exceeded_limit?(top_up)
     @balance += top_up
-    raise LIMIT_EXCEEDED if limit?
     "Your balance is now #{@balance}"
   end
+
+  private
 
   def deduct(amount)
     @balance -= amount
   end
 
-  def limit?
-    @balance > DEFAULT_LIMIT
+  def exceeded_limit?(amount)
+    @balance + amount > DEFAULT_LIMIT
   end
 end
 
@@ -32,15 +34,15 @@ class Journey
   attr_reader :journey
   attr_reader :entry_station
 
-  def initialize(card) # Pass in instance of Oyster Card
-    @card = card
+  def initialize(oystercard) # Pass in instance of Oyster Card
+    @oystercard = oystercard
     @journey = journey
     @entry_station = nil
   end
 
   def touch_in(entry_station)
     @entry_station = entry_station
-    raise 'You have insufficient funds' if @card.balance < MINIMUM
+    raise 'You have insufficient funds' if @oystercard.balance < MINIMUM
     @journey = TOUCHED_IN + " #{@entry_station}"
     "You have touched in at #{@entry_station}"
   end
@@ -49,7 +51,7 @@ class Journey
     raise 'You have already touched out' unless in_journey?
     @journey = TOUCHED_OUT
     @entry_station = nil
-    deduct(@card)
+    deduct(@oystercard)
   end
 
   def in_journey?
@@ -58,7 +60,7 @@ class Journey
 
   private
 
-  def deduct(card)
-    card.balance -= 1
+  def deduct(oystercard)
+    oystercard.balance -= 1
   end
 end
