@@ -1,66 +1,53 @@
-class OysterCard
-  DEFAULT_BALANCE = 0
-  DEFAULT_LIMIT = 90
-  LIMIT_EXCEEDED = 'top up limit reached'.freeze
+MAX_BALANCE = 90
+MINIMUM_FARE = 1
+DEFAULT_BALANCE = 0
+# in lib/oystercard.rb
 
-  attr_accessor :balance
 
-  def initialize
-    @balance = DEFAULT_BALANCE
-  end
+class Oystercard
+  attr_reader :balance, :entry_station, :journey, :trip_history
 
-  def top_up(top_up)
-    raise LIMIT_EXCEEDED if exceeded_limit?(top_up)
-    @balance += top_up
-    "Your balance is now #{@balance}"
-  end
-
-  private
-
-  def deduct(amount)
-    @balance -= amount
-  end
-
-  def exceeded_limit?(amount)
-    @balance + amount > DEFAULT_LIMIT
-  end
-end
-
-class Journey
-  TOUCHED_IN = 'touched in'.freeze
-  TOUCHED_OUT = 'touched out'.freeze
-  MINIMUM = 1
-
-  attr_reader :journey
-  attr_reader :entry_station
-
-  def initialize(oystercard) # Pass in instance of Oyster Card
-    @oystercard = oystercard
-    @journey = journey
+  def initialize(balance = DEFAULT_BALANCE)
+    @balance = balance
     @entry_station = nil
+    @journey = {}
+    @trip_history = []
   end
 
-  def touch_in(entry_station)
-    @entry_station = entry_station
-    raise 'You have insufficient funds' if @oystercard.balance < MINIMUM
-    @journey = TOUCHED_IN + " #{@entry_station}"
-    "You have touched in at #{@entry_station}"
-  end
-
-  def touch_out
-    raise 'You have already touched out' unless in_journey?
-    @journey = TOUCHED_OUT
-    @entry_station = nil
-    deduct(@oystercard)
+  def top_up(amount)
+    raise "Balance cannot exceed #{MAX_BALANCE}" if exceeded_limit?(amount)
+    @balance += amount
   end
 
   def in_journey?
     !@entry_station.nil?
   end
 
+  def touch_in(station = nil) # set as no class is created
+    raise 'Insufficient funds' if insufficient_funds?
+    @entry_station = station  #  station = Station.new
+    @journey[@entry_station] = 'not touched out yet'
+  end
+
+  def touch_out(station = nil)
+    deduct(MINIMUM_FARE)
+    # @entry_station = nil
+    @journey[@entry_station] = station
+    @trip_history << @journey
+    @journey = {}
+  end
+
   private
 
-  def deduct(oystercard)
-    oystercard.balance -= 1
+  def exceeded_limit?(amount)
+    @balance + amount > MAX_BALANCE
+  end
+
+  def insufficient_funds?
+    @balance < MINIMUM_FARE
+  end
+
+  def deduct(amount)
+    @balance -= amount
   end
 end
