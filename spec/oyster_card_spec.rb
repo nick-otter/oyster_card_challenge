@@ -1,6 +1,4 @@
-require 'oyster_card'
-require 'station'
-require 'journey'
+require_relative '../lib/oyster_card.rb'
 
 RSpec.describe OysterCard do
   let(:station) { double :station }
@@ -36,44 +34,19 @@ RSpec.describe OysterCard do
 
   context '#touch_in' do
     it 'should raise error if insufficient funds' do
-      expect { subject.touch_in }.to raise_error 'Insufficient funds'
+      expect { subject.touch_in(:entry_station) }.to raise_error 'Insufficient funds'
     end
   end
   context '#touch_out' do
     before { subject.instance_variable_set(:@balance, 30) }
     before { subject.touch_in(station) }
-    it 'should reduce the balance by the minimum fair' do
-      expect { subject.touch_out }.to change { subject.balance }.by(-1)
+    it 'should reduce the balance by the minimum fare' do
+      expect { subject.touch_out(:exit_station) }.to change { subject.balance }.by(-1)
     end
     it '.deduct' do
-      expect(subject).to respond_to(:deduct)
+      subject.touch_in(:entry_station)
+      subject.touch_out(:exit_station)
+      expect { subject.send(:deduct, 1) }.to change { subject.balance }.by(-1)
     end
   end
-
-
-journey = Journey.new
-
-context 'Journey' do
-  it 'records starting station' do
-    subject.top_up 10
-    subject.touch_in(station)
-    expect(journey.current_journey).to include('station' => 'not touched out yet')
-  end
-  it 'is in journey once they touch in' do
-    subject.touch_in(station)
-    expect(journey.in_journey?).to be_true
-  end
-  it 'forgets entry station on touch out' do
-    subject.touch_out(exit_station)
-    expect(journey.current_journey).to be_empty
-  end
-  it 'is not in a journey once they touch out' do
-    subject.touch_in(station)
-    subject.touch_out(station)
-    expect(journey).to_not be_in_journey
-  end
-  it 'is not in use when initializing' do
-    expect(subject).to_not be_in_journey
-  end
-end
 end

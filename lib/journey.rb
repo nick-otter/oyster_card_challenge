@@ -18,8 +18,13 @@ class Journey
 
   def store_exit(exit_station)
     @current_journey[@entry_station] = exit_station
-    @all_trips << @current_journey
-    @current_journey = {}
-    @entry_station = nil
+  end
+
+  def fare
+    if @current_journey.size > 1
+      return PENALTY_FARE
+    else
+      return MINIMUM_FARE
+    end
   end
 end
