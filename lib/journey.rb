@@ -1,11 +1,10 @@
 class Journey
-  attr_accessor :entry_station, :exit_station, :current_journey, :all_journeys
+  attr_accessor :entry_station, :exit_station, :current_journey
 
   def initialize(entry_station = nil, exit_station = nil)
     @entry_station = entry_station
     @exit_station = exit_station
     @current_journey = {}
-    @all_trips = []
   end
 
   def store_entry(entry)
@@ -18,7 +17,7 @@ class Journey
   end
 
   def store_exit(exit_station)
-    @journey[@entry_station] = exit_station
+    @current_journey[@entry_station] = exit_station
     @all_trips << @current_journey
     @current_journey = {}
     @entry_station = nil

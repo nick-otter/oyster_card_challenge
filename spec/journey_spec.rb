@@ -2,7 +2,7 @@ require 'station'
 require 'journey'
 require 'oyster_card'
 
-RSpec. describe Journey do
+RSpec.describe Journey do
   let(:oyster) { OysterCard.new }
 
   it 'add starting station to journey' do
